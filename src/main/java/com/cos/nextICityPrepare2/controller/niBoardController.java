@@ -55,27 +55,29 @@ public class niBoardController {
 		String str1 = "이전글이 없습니다.";
 		String str2 = "다음글이 없습니다.";
 		
-		if((id-1) == 0) {
-			model.addAttribute("niBoard_pre",str1);
-		}else{
-			model.addAttribute("niBoard_pre",boardService.글보기(id-1));
-		}
-		
 		/*
-		 * if((id-1) == 0) { model.addAttribute("niBoard_pre",str1); } else { String
-		 * preArticle = boardService.글보기(id-1); if(preArticle != null) {
-		 * model.addAttribute("niBoard_pre", preArticle); } else {
-		 * model.addAttribute("niBoard_pre", ""); } }
+		 * if((id-1) == 0) { model.addAttribute("niBoard_pre",str1); }else {
+		 * model.addAttribute("niBoard_pre",boardService.글보기(id-1)); }
 		 */
-		
+		try {
+			model.addAttribute("niBoard_pre", boardService.글보기(id - 1));
+			if ((id - 1) == 0) {
+				model.addAttribute("niBoard_pre", str1);
+			} else {
+				model.addAttribute("niBoard_pre", boardService.글보기(id - 1));
+			}
+		} catch (IllegalIdentifierException e) {
+			model.addAttribute("niBoard_pre", str1);
+		}
+	
 		try {
 			model.addAttribute("niBoard_nxt",boardService.글보기(id+1));
 		}catch(IllegalIdentifierException e){
 			model.addAttribute("niBoard_nxt",str2);
 		}
  		return "niBoard/niBoardDetail";
-	}
-	
+		}
+		
 	@GetMapping("/niBoard/{id}/niBoardUpdateForm")
 	public String niBoardUpdateForm(@PathVariable int id,Model model) {
 		model.addAttribute("niBoard",boardService.글보기(id));
